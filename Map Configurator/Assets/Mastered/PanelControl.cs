@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class PanelControl : MonoBehaviour
 {
+
+}
+    /*
     public float horizontalInput;
     public float verticalInput;
     RectTransform rTransform;
 
     private void Start()
     {
-        rTransform = GetComponent<RectTransform>(); 
+        rTransform = GetComponent<RectTransform>();
     }
     // Start is called before the first frame update
     //   void Start()
@@ -21,6 +24,11 @@ public class PanelControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+    }
+}
+    */
+        /*
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
 
@@ -31,3 +39,4 @@ public class PanelControl : MonoBehaviour
         rTransform.position = currentPosition;
     }
 }
+        */

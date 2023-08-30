@@ -77,15 +77,14 @@ public class HexInstance : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
-        meshRend = GetComponent<MeshRenderer>();
-    }
+  //  void Start()
+   // {
+        
+  //  }
 
-    private void Update()
-    {
-        float yVal = transform.position.y;
-        Color targetCol;        // = Color.Lerp(Color.white, Color.black, yVal);
+  //  private void Update()
+  //  {
+        // = Color.Lerp(Color.white, Color.black, yVal);
         /*
         if(test > Time.time - 0.1f)
         {
@@ -93,11 +92,22 @@ public class HexInstance : MonoBehaviour
         }
         */
 
-        if(waterBiome)
+ //   }
+
+    public Color InitialiseColour()
+    {
+        if(meshRend == null)
+        {
+            meshRend = GetComponent<MeshRenderer>();
+        }
+
+        float yVal = transform.position.y;
+        Color targetCol;
+        if (waterBiome)
         {
             targetCol = Color.Lerp(Color.black, Color.blue, yVal);
         }
-        else if(alternativeBiome)
+        else if (alternativeBiome)
         {
             targetCol = Color.Lerp(Color.yellow, Color.black, yVal);
         }
@@ -107,6 +117,8 @@ public class HexInstance : MonoBehaviour
         }
 
         meshRend.material.color = targetCol;
+
+        return targetCol;
     }
 
     public void InitialiseWater(float yValue)
@@ -123,7 +135,7 @@ public class HexInstance : MonoBehaviour
         Instantiate(chest, spawnLocation.position, Quaternion.identity);
     }
 
-    public void SpawnAssets()
+    public void SpawnAssets(GameObject targetAsset)
     {
         List<Vector3> allCoordinates = new List<Vector3>();
 
@@ -153,7 +165,9 @@ public class HexInstance : MonoBehaviour
 
         finalValue = finalValue / allCoordinates.Count;
         finalValue.y += 10;
-        Instantiate(testAsset, finalValue, Quaternion.identity);
+
+        targetAsset.transform.position = finalValue;
+      //  Instantiate(targetAsset, finalValue, Quaternion.identity);
 
 
 

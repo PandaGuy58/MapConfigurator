@@ -40,6 +40,11 @@ public class UIRaycast : MonoBehaviour
                 {
                     grabPanel.ClickGrabPanel(mouseDifference);
                 }
+
+                if(Input.GetMouseButtonDown(0))
+                {
+                    grabPanel.MouseDownPanel();
+                }
             }
             else
             {

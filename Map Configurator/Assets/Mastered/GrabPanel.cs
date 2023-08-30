@@ -57,7 +57,7 @@ public class GrabPanel : MonoBehaviour
 
     public void ClickGrabPanel(Vector2 mouseDifference)
     {
-        timeClickPanel = Time.time + 0.05f;
+        timeClickPanel = Time.time;
 
         Vector2 currentPosition = targetRTransform.position;
         currentPosition += mouseDifference;
@@ -70,15 +70,20 @@ public class GrabPanel : MonoBehaviour
         if(timeClicked + 0.5f > Time.time)
         {
             hidden = !hidden;
+            timeClicked = -1;
             HidePanel();
         }
+        else
+        {
+            timeClicked = Time.time;
+        }
 
-        timeClicked = Time.time;
+        
     }
 
     void HidePanel()
     {
-        for(int i = 0; i < gameObjects.Count; i++)
+        for (int i = 0; i < gameObjects.Count; i++)
         {
             gameObjects[i].SetActive(hidden);
         }

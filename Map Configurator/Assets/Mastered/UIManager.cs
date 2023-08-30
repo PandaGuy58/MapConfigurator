@@ -6,7 +6,9 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    public GenerationMaster generationMaster;
+    // map stats panel
+
+    public GenerationMaster generationMaster;                       
     public CameraControl camControl;
 
     public Slider sizeXSlider;
@@ -24,7 +26,9 @@ public class UIManager : MonoBehaviour
 
     public Slider waterHeight;
 
+
     public TMP_InputField randomSeedInputField;
+
 
     public TextMeshProUGUI textMeshXsize;
     public TextMeshProUGUI textMeshYsize;
@@ -38,22 +42,21 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI waterFrequency;
     public TextMeshProUGUI waterTotalTiles;
 
-//    public TextMeshProUGUI chestTotalTiles;
     public TextMeshProUGUI biomeTotalValue;
     public TextMeshProUGUI altnernativeBiomeTotalTiles;
 
-//    public TextMeshProUGUI waterTotalValue;
-//    public TextMeshProUGUI waterTotalTiles;
-
     public TextMeshProUGUI waterHeightValueTmp;
 
+    // asset stats panel
 
-  //  public TextMeshProUGUI randomSeedText;
+    public Slider assetSizeSlider;
+    public Slider assetDensitySlider;
 
-        // maybe refactor
-  //  public List<Vector2> chosenChestLocations;
+    public TextMeshProUGUI assetSizeText;
+    public TextMeshProUGUI assetDensityText;
 
-    // Start is called before the first frame update
+
+
     void Start()
     {
 
@@ -68,34 +71,34 @@ public class UIManager : MonoBehaviour
 
     public void UpdateUI()
     {
-     //   Debug.Log(Time.time);                                             // extract from UI sliders
+               // extract from UI sliders
             
-        int xSize = (int)sizeXSlider.value;                                                      // * 10;
-        int ySize = (int)sizeYSlider.value;                                                     // * 10;
-        int noiseScale = (int)noiseScaleSlider.value;                                          // * 10;
-        int seedX = (int)xSeedSlider.value;                                                        // * 10;
-        int seedY = (int)ySeedSlider.value;                                                      // * 10;
+               // map stats panel
+
+        int xSize = (int)sizeXSlider.value;                                                      
+        int ySize = (int)sizeYSlider.value;                                                     
+        int noiseScale = (int)noiseScaleSlider.value;                                         
+        int seedX = (int)xSeedSlider.value;                                                       
+        int seedY = (int)ySeedSlider.value;                                                    
         int chestValue = (int)chestSlider.value;
         int biomeValue = (int)biomeSlider.value;
-        int randomSeedValue = int.Parse(randomSeedInputField.text);    //(int)randomSeedInputField.text;
+        int randomSeedValue = int.Parse(randomSeedInputField.text);    
         int waterValue = (int)waterSlider.value;
         int waterHeightValue = (int)waterHeight.value;
 
+                // assets stats panel
 
+        int assetSize = (int)assetSizeSlider.value;
+        int assetDensity = (int)assetDensitySlider.value;
 
-        //    string randomSeedString = randomSeedField.text;
-        //   int randomSeedInt = int.Parse(randomSeedField.text);
-
-        //   int randomSeedValue = randomSeedString
-
-        // bool meshRendered = hexMeshRendering.isOn;
-
-        generationMaster.Generate(xSize, ySize, noiseScale, seedX, seedY, chestValue, biomeValue, randomSeedValue, waterValue, waterHeightValue);
+                // execute generation 
+        generationMaster.Generate(xSize, ySize, noiseScale, seedX, seedY, chestValue, biomeValue, randomSeedValue, waterValue, waterHeightValue, assetSize, assetDensity);
         UIValues uiVals = generationMaster.RequestIUValues();
         camControl.CalculateCameraTarget(generationMaster.GetTilesList());
 
 
         // update UI 
+        // map stats panel
         textMeshXsize.text = xSize.ToString();                                  
         textMeshYsize.text = ySize.ToString();
         textMeshScale.text = noiseScale.ToString();
@@ -110,6 +113,12 @@ public class UIManager : MonoBehaviour
         chestTotalTiles.text = uiVals.chest.ToString();
         waterTotalTiles.text = uiVals.water.ToString();
         altnernativeBiomeTotalTiles.text = uiVals.biome.ToString();
+
+        // asset stats panel
+        assetSizeText.text = assetSize.ToString();
+        assetDensityText.text = assetDensity.ToString();
+
+
 
 
     }

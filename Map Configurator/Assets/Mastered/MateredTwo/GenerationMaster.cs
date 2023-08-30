@@ -10,6 +10,12 @@ public class GenerationMaster : MonoBehaviour
     [SerializeField]
     private GameObjectPool chestPool;
 
+    [SerializeField]
+    private GameObjectPool greenAssetPool;
+
+    [SerializeField]
+    private GameObjectPool yellowAssetPool;
+
     private List<GameObject> allTilesList;
     private List<HexInstance> allHexList;
 
@@ -21,20 +27,8 @@ public class GenerationMaster : MonoBehaviour
 
     public HexInstance[,] hexInstances;
     public Vector2 testVector;
-    //  [SerializeField]
-    //   private Transform lookTarget;
-    // public CameraControl camControl;
 
-    private void Start()
-    {
-        
-    }
-
-    private void Update()
-    {
-
-
-    }
+   // public int assetDensity = 5;
 
     public List<GameObject> GetTilesList()
     {
@@ -55,15 +49,16 @@ public class GenerationMaster : MonoBehaviour
     {
         return alternativeBiomeTotalNumber;
     }
-    public void Generate(int width, int height, int noise, int seedX, int seedY, int chest, int biome, int randSeed, int water, int waterHeight)            
-     //   (int width, int height, float noise, float seedXval, float seedYval, int chest, int biome, int randomSeed, int water, int waterHeight)
+
+    public void Generate(int width, int height, int noise, int seedX, int seedY, int chest, int biome, int randSeed, int water, int waterHeight, int assetSize, int assetDensity)            
     {
-      //  UIValues uIValues = new UIValues();
         randomSeedVal = randSeed;
 
         ResetLists();
         tilesPool.ResetPool();
         chestPool.ResetPool();
+        greenAssetPool.ResetPool();
+        yellowAssetPool.ResetPool();    
 
         float noiseFloat = noise * 0.01f;
 
@@ -72,94 +67,37 @@ public class GenerationMaster : MonoBehaviour
         float chestFloat = chest;
 
         float biomeFloat = biome;
-     //   float waterFloat = water;
-     //   float waterHeightFloat = waterHeight;
 
         float[,] noiseMap = Noise.GenerateNoiseMap(width, height, noiseFloat, seedXFloat, seedYFloat);
 
         InstantiateTiles(width, height, noiseMap);
 
-        chestFloat = chestFloat * 0.1f;                    //; * 0.01f;
+        chestFloat = chestFloat * 0.1f;                   
         chestFloat = chestFloat * allTilesList.Count;
 
-     //   Debug.Log(Time.time + "chest float: " + chestFloat + " chest int: " + (int) chestFloat);
-
         InstantiateChests((int)chestFloat);
-
-        
-     //  InstantiateChests((int)chestFloat);
 
         biomeFloat = biomeFloat * 0.1f;
         biomeFloat = biomeFloat * allTilesList.Count;
 
         ConfigureBiome((int)biomeFloat);
         ConfigureWater(water, waterHeight);
+        ConfigureTileAssets(assetDensity, assetSize);
 
-
-        //  
-
-        // Debug.Log(chestFloat);
-        //    InstantiateChests((int)chestFloat);
-
-        //  return uIValues;
-        //  ConfigureBiome((int)biomeFloat);
-        //    ConfigureWater((int)waterFloat, (int)waterHeightFloat);
+        
 
 
 
-
-        //     ConfigureBiome(biomeNumber);
-        //     ConfigureWater(water, waterHeight);
-        //      ConfigureTileAssets();
-
-
-
-        //  CalculateCameraTarget();
-        //   InstantiateChests(chestNumber);
-        //   ConfigureBiome(biomeNumber);
-        //     ConfigureWater(water, waterHeight);
-        //      ConfigureTileAssets();
-
-        // InstantiateChests(chestFloat);
-        //  ConfigureBiome(biomeNumber);
-        // ConfigureWater(water, waterHeight);
-        //  ConfigureTileAssets();
-
-        //   Random.seed = randomSeed;
-
-
-        //  float[,] noiseMap = Noise.GenerateNoiseMap(width, height, noise, seedXval, seedYval);
-        //  InstantiateTiles(width, height, noiseMap);
-
-        //  int chestNumber = allTilesList.Count;           // * (chestPercentage / 100);
-        //   float chestValue = chest * 0.01f;
-
-        //    float calculateChest = (float)chestNumber * chestValue;
-        //   chestNumber = (int)calculateChest;
-
-        //  int biomeNumber = allTilesList.Count;
-        //  float biomeValue = biome * 0.1f;
-
-        //  float calculateBiome = (float)biomeNumber * biomeValue;
-        //   biomeNumber = (int)calculateBiome;
-
-
-        ///   CalculateCameraTarget();
-        //   InstantiateChests(chestNumber);
-        //   ConfigureBiome(biomeNumber);
-        //     ConfigureWater(water, waterHeight);
-        //      ConfigureTileAssets();
+    //    for(int i = 0; i < assetDensity; i++)
+      //  {
+      //      ConfigureTileAssets();
+       // }
+        
     }
-    /*
-    public void RequestValues(UIManager uiManager)
-    {
-        uiManager.UpdateFigures(0, 0);
-    }
-    */
+
 
     void ResetLists()
     {
-
         allTilesList = new List<GameObject>();
         allHexList = new List<HexInstance>();
 
@@ -168,11 +106,6 @@ public class GenerationMaster : MonoBehaviour
         alternativeBiomeTotalNumber = 0;
     }
 
-    /*
-     *     private List<GameObject> allChestList;
-    private List<GameObject> allWaterList;
-    private List<GameObject> allAlternativeBiomeList;
-    */
 
     void InstantiateTiles(int xLength, int yLength, float[,] noiseMap)
     {
@@ -245,7 +178,6 @@ public class GenerationMaster : MonoBehaviour
 
     }
 
-
     void InstantiateChests(int chestsNumber)
     {
         Random.seed = randomSeedVal;
@@ -305,19 +237,10 @@ public class GenerationMaster : MonoBehaviour
       //  }
 
     }
-    /*
-    HexInstance FindHexNeighbour(HexInstance hexTarget)
-    {
-        HexInstance foundHex = null;
-
-        return foundHex;
-    }
-    */
 
     void ConfigureWater(int waterNumber, int waterHeight)
     {
         Random.seed = randomSeedVal;
-   //     Debug.Log(Time.time + " " + waterTotalNumber);
 
         if (waterNumber != 0)
         {
@@ -363,107 +286,71 @@ public class GenerationMaster : MonoBehaviour
         }
     }
 
-        /*
-        if(waterNumber > 0)
+
+    void ConfigureTileAssets(int assetDensity, int assetSize)
+    {
+        for (int i = 0; i < allHexList.Count; i++)
         {
-            Random.seed = randomSeedVal;
+            HexInstance targetHex = allHexList[i];
+            Color targetColour = targetHex.InitialiseColour();
 
-            HexInstance startHex = allHexList[Random.Range(0, allHexList.Count)];
-            List<HexInstance> selectedHexes = new List<HexInstance>();
-            selectedHexes.Add(startHex);
-
-            startHex.InitialiseWater(waterHeight);
-            waterNumber--;
-
-            while (waterNumber > 0 && !(selectedHexes.Count == 0))
+            for (int ii = 0; ii < assetDensity; ii++)
             {
+                GameObject targetAsset = null;
 
-                HexInstance randomInstance = selectedHexes[Random.Range(0, selectedHexes.Count)];
-                List<HexInstance> neighbours = GetNeighboursAvailableWater(randomInstance);
-                if (neighbours.Count > 0)
+                if (targetHex.alternativeBiome && !targetHex.waterBiome)
                 {
-                    HexInstance nextRandomInstance = neighbours[Random.Range(0, neighbours.Count)];
-                    nextRandomInstance.waterBiome = true;
-                    selectedHexes.Add(nextRandomInstance);
-                    waterNumber--;
-
-                    nextRandomInstance.InitialiseWater((float)waterHeight);
-                    waterNumber++;
-
-                    if(nextRandomInstance.alternativeBiome)
-                    {
-                        alternativeBiomeTotalNumber--;
-                    }
+                    targetAsset = yellowAssetPool.RequestObject();
                 }
-                else
+                else if (!targetHex.waterBiome)
                 {
-                    selectedHexes.Remove(randomInstance);
+                    targetAsset = greenAssetPool.RequestObject();
                 }
 
+                if (targetAsset != null)
+                {
+                    targetHex.SpawnAssets(targetAsset);
+                    MeshRenderer rend = targetAsset.GetComponent<MeshRenderer>();
+                    rend.material.color = targetColour;
+
+                 //   float floatAssetSize  = (float)assetSize;
+                 //   floatAssetSize *= 0.05f;
+
+                    Vector3 size = new Vector3(0.05f, 0.05f, 0.05f);
+                    size = size + (size * 0.5f * assetSize);
+
+                    size.x = size.x * Random.Range(1.0f, 1.5f);
+                    size.y = size.y * Random.Range(1.0f, 1.5f);
+                    size.z = size.z * Random.Range(1.0f, 1.5f);
+
+                    targetAsset.transform.localScale = size;
+
+                }
             }
         }
+    }
+        /*
+    //    for(int i = 0; i < allHexList.Count; i++)
+     //   {
+            HexInstance hexInstance = allHexList[i];
+            GameObject targetAsset = null;            
+
+            if (hexInstance.alternativeBiome && !hexInstance.waterBiome)
+            {
+                targetAsset = yellowAssetPool.RequestObject();
+            }
+            else if(!hexInstance.waterBiome)
+            {
+                targetAsset = greenAssetPool.RequestObject();
+            }
+
+            if(targetAsset != null)
+            {
+               // allHexList[i].SpawnAssets(targetAsset);
+            }
+       // }
     }
         */
-
-
-    /*
-    targetHex.waterBiome = true;
-
-    //     HexInstance neighbour = targetHex.GetNeighbour();
-    Vector2 target = targetHex.indexLocation;
-    target.x += 1;
-
-    HexInstance hex = FindHexInArrayByIndex(target);
-    if (hex != null)
-    {
-        hex.waterBiome = true;
-    }
-    */
-
-
-
-    //   if(neighbour != null)
-    //   {
-    //  Debug.Log(Time.time);
-    //      neighbour.waterBiome = true;
-    //  }
-
-    //   waterNumber -= 1;
-    //   while(waterNumber != 0)
-    //  {
-
-    // }
-    //   HexInstance neighbour = targetHex.GetNeighbour();
-    //   neighbour.waterBiome = true;
-
-    void ConfigureTileAssets()
-    {
-        for(int i = 0; i < allHexList.Count; i++)
-        {
-            allHexList[i].SpawnAssets();
-        }
-    }
-
-    /*
-    public void InstantiateChests(List<Vector2> chosenLocations)
-    {
-        for (int i = 0; i < chosenLocations.Count; i++)
-        {
-            Vector2 targetLocation = chosenLocations[i];
-            HexInstance targetHex = hexInstances[(int)targetLocation.x, (int)targetLocation.y];
-            GameObject targetChest = chestPool.RequestChest();
-            if (targetHex == null)
-            {
-                Debug.Log(Time.time);
-            }
-            targetHex.SpawnChest(targetChest);
-
-            //
-            //targetHex.SpawnChest(chestPool.RequestChest());
-        }
-    }
-
-    */
 
     HexInstance FindHexInArrayByIndex(Vector2 index)                    // search by array index
     {
@@ -488,9 +375,6 @@ public class GenerationMaster : MonoBehaviour
 
         if (!fail)
         {
-        //    Debug.Log("targetX : " + targetX + "target Y " + targetY + " " + Time.time); ;
-          //  Debug.Log(hexInstances.GetLength(0) + " hexInstances.GetLength(0) " + Time.time); ;
-         //   Debug.Log(hexInstances.GetLength(1) + " (hexInstances.GetLength(1) " + Time.time); ;
             return hexInstances[targetX, targetY];
         }
 
@@ -613,7 +497,6 @@ public class GenerationMaster : MonoBehaviour
     public UIValues RequestIUValues()
     {
         UIValues values = new UIValues(waterTotalNumber, chestTotalNumber, alternativeBiomeTotalNumber);
-        //    UIValues values = new UIValues(waterNumber, chestNumber, alternativeBiomeNumber);
         return values;
     }
 }
@@ -632,23 +515,80 @@ public class UIValues
 }
 
 
+
+
+
+
+
 /*
-public int CalculateCameraTarget()
-{
-    Vector3 targetLocation = Vector3.zero;
-    for(int i = 0; i < allTilesList.Count; i++)
-    {
-        targetLocation = targetLocation + allTilesList[i].transform.position;
+ *        
+        if(waterNumber > 0)
+        {
+            Random.seed = randomSeedVal;
+
+            HexInstance startHex = allHexList[Random.Range(0, allHexList.Count)];
+            List<HexInstance> selectedHexes = new List<HexInstance>();
+            selectedHexes.Add(startHex);
+
+            startHex.InitialiseWater(waterHeight);
+            waterNumber--;
+
+            while (waterNumber > 0 && !(selectedHexes.Count == 0))
+            {
+
+                HexInstance randomInstance = selectedHexes[Random.Range(0, selectedHexes.Count)];
+                List<HexInstance> neighbours = GetNeighboursAvailableWater(randomInstance);
+                if (neighbours.Count > 0)
+                {
+                    HexInstance nextRandomInstance = neighbours[Random.Range(0, neighbours.Count)];
+                    nextRandomInstance.waterBiome = true;
+                    selectedHexes.Add(nextRandomInstance);
+                    waterNumber--;
+
+                    nextRandomInstance.InitialiseWater((float)waterHeight);
+                    waterNumber++;
+
+                    if(nextRandomInstance.alternativeBiome)
+                    {
+                        alternativeBiomeTotalNumber--;
+                    }
+                }
+                else
+                {
+                    selectedHexes.Remove(randomInstance);
+                }
+
+            }
+        }
     }
+ 
 
-    targetLocation = targetLocation / allTilesList.Count;
-    targetLocation.y += 5;
 
- //   lookTarget.position = targetLocation;
- //   camControl.tilesNumber = allTilesList.Count;
+targetHex.waterBiome = true;
 
-    return allTilesList.Count;
+//     HexInstance neighbour = targetHex.GetNeighbour();
+Vector2 target = targetHex.indexLocation;
+target.x += 1;
+
+HexInstance hex = FindHexInArrayByIndex(target);
+if (hex != null)
+{
+    hex.waterBiome = true;
 }
 
-*/
 
+//   if(neighbour != null)
+//   {
+//  Debug.Log(Time.time);
+//      neighbour.waterBiome = true;
+//  }
+
+//   waterNumber -= 1;
+//   while(waterNumber != 0)
+//  {
+
+// }
+//   HexInstance neighbour = targetHex.GetNeighbour();
+//   neighbour.waterBiome = true;
+
+*/

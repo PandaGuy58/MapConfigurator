@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class GameObjectPool : MonoBehaviour
 {
-    public GameObject objectPrefab;
+    [SerializeField]
+    public bool multipleVariants;
+
+    public GameObject objectPrefab;             // if multiple variants == false
+    public List<GameObject> objectPrefabVariants;
 
     public List<GameObject> availableObjects;
     public List<GameObject> allObjects;
@@ -17,7 +21,15 @@ public class GameObjectPool : MonoBehaviour
         
         if (availableObjects.Count == 0)
         {
-            instance = Instantiate(objectPrefab);
+            if(multipleVariants)
+            {
+                instance = Instantiate(objectPrefabVariants[Random.Range(0, objectPrefabVariants.Count)]);
+            }
+            else
+            {
+                instance = Instantiate(objectPrefab);
+            }
+
             instance.transform.parent = targetParent;
 
             allObjects.Add(instance);
